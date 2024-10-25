@@ -3,7 +3,7 @@ import sys
 import io
 
 
-def render_text_on_image(input_image_path, text_to_draw, output_image_path=None, font_path="arial-unicode-ms-regular.ttf", font_size=52):
+def render_text_on_image(input_image_path, text_to_draw, output_image_path=None, font_path="arial-unicode-ms-bold.ttf", font_size=52):
     image = Image.open(input_image_path)
 
     draw = ImageDraw.Draw(image)
