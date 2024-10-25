@@ -1,0 +1,6 @@
+services:
+  owlrandomshitbot:
+    image: owlrandomshitbot
+    build:
+      context: . 
+    env_file: ".env"
