@@ -26,6 +26,26 @@ async def inline_respond_with_sticker(update: Update, context: ContextTypes.DEFA
     query = update.inline_query.query
     if not query:
         return
+    
+    xcom = "https://x.com"
+
+    if xcom in query:
+
+        results = [
+            {
+                "type": "article",
+                "id": "1",
+                "title": "fix xitter links",
+                "description": query.replace(xcom, "https://fxtwitter.com"),
+                "input_message_content": {
+                    "message_text": query.replace(xcom, "https://fxtwitter.com")
+                }
+            }
+        ]
+
+        await context.bot.answer_inline_query(update.inline_query.id, results)
+
+        return
 
     bot_info = await context.bot.get_me()
 
