@@ -2,7 +2,8 @@
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters, InlineQueryHandler
 import logging
-from render import render_text_on_image
+from render import render_text_on_image, image_to_string
+from io import BytesIO
 
 import os
 
@@ -20,6 +21,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def respond_with_picture(update: Update, context: ContextTypes.DEFAULT_TYPE):
     file = render_text_on_image("red_ebalo.png", update.message.text)
     await context.bot.send_sticker(chat_id=update.effective_chat.id, sticker=file)
+
+async def image2string(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    photo = update.message.photo[-1]  
+    
+
+    file = await photo.get_file()  
+    bio = BytesIO()          
+    await file.download_to_memory(out=bio)   
+
+    bio.seek(0)
+
+    s = image_to_string(bio)
+
+    await update.message.reply_text(s)
 
 async def inline_respond_with_sticker(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
@@ -68,6 +83,8 @@ def main():
     picture_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, respond_with_picture)
 
     application.add_handler(start_handler)
+
+    application.add_handler(MessageHandler(filters.PHOTO, image2string))
     application.add_handler(picture_handler)
     application.add_handler(InlineQueryHandler(inline_respond_with_sticker))
 

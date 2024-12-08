@@ -65,6 +65,38 @@ def render_text_on_image(input_image_path, text_to_draw, output_image_path=None,
 
         return file
 
+WIDTH = 22
+HEIGHT = 9
+
+def image_to_string(image_file):
+
+    img = Image.open(image_file)
+
+    img = img.resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
+
+
+    img = img.convert("1")
+
+    # Get image dimensions
+    width, height = img.size
+    if width != 22 or height != 9:
+        raise ValueError("The image must be exactly 22x9 pixels.")
+    
+    # Create the string representation
+    pixel_string = ""
+    for y in range(height):
+        for x in range(width):
+            # Get the pixel value (0 for black, 255 for white)
+            pixel = img.getpixel((x, y))
+            if pixel == 0:  # Black pixel
+                pixel_string += "Ń"
+            else:  # White pixel
+                pixel_string += "…"
+        pixel_string += " "  # New line for each row
+    
+    return pixel_string
+
+
 if __name__ == "__main__":
 
     render_text_on_image("red_ebalo.png", " ".join(sys.argv[1:]), output_image_path="red_ebalo_text.png")
